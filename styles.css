@@ -7,6 +7,7 @@
 h1,
 h2 {
   font-family: "Montserrat", serif;
+  color: green;
 }
 
 body {
@@ -19,7 +20,7 @@ body {
 }
 
 h1 {
-  text-emphasis: "✨";
+  text-emphasis: "";
   text-align: center;
 }
 
@@ -43,6 +44,7 @@ form textarea {
 form button {
   padding: 4px;
   cursor: pointer;
+  color: green;
 }
 
 .todocontainer,
