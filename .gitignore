@@ -1,0 +1,8 @@
+# Node.js dependencies
+node_modules
+.env
+
+# Logs and system files
+*.log
+package-lock.json
+.DS_Store

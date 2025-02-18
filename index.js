@@ -2,73 +2,73 @@ const textarea = document.querySelector("textarea");
 const addBtn = document.getElementById("addBtn");
 const todocontainer = document.querySelector(".todocontainer");
 
-let todoList = [];
+const API_URL = "http://localhost:5000/tasks"; // Backend URL
 
-function initialLoad() {
-  if (!localStorage.getItem("todos")) {
-    return;
+// Fetch and display tasks from the backend
+async function fetchTodos() {
+  const response = await fetch(API_URL);
+  const todos = await response.json();
+  updateUI(todos);
+}
+
+// Add a new task
+async function addTodo() {
+  const description = textarea.value.trim();
+  if (!description) return;
+
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ description }),
+  });
+
+  if (response.ok) {
+    textarea.value = "";
+    fetchTodos();
   }
-  todoList = JSON.parse(localStorage.getItem("todos")).todoList;
-  updateUI();
 }
 
-initialLoad();
+// Edit a task
+async function editTodo(id, description) {
+  textarea.value = description;
 
-function addTodo() {
-  const todo = textarea.value;
-  if (!todo) {
-    return;
-  }
-
-  console.log("Added todo:", todo);
-  todoList.push(todo);
-  textarea.value = ""; //resets to empty
-  updateUI();
-}
-
-function editTodo(index) {
-  textarea.value = todoList[index];
-  todoList = todoList.filter((element, elementIndex) => {
-    if (index === elementIndex) {
-      return false;
-    }
-    return true;
-  });
-  updateUI();
-}
-
-function deleteTodo(index) {
-  todoList = todoList.filter((element, elementIndex) => {
-    if (index === elementIndex) {
-      return false;
-    }
-    return true;
-  });
-  updateUI();
-}
-
-function updateUI() {
-  let newInnerHTML = "";
-
-  todoList.forEach((todoElement, todoIndex) => {
-    newInnerHTML += `<div class="todo">
-          <p>${todoElement}</p>
-          <div class="btnContainer">
-            <button class="iconBtn" onclick="editTodo(${todoIndex})">
-              <i class="fa-solid fa-pen-to-square"></i>
-            </button>
-
-            <button class="iconBtn" onclick="deleteTodo(${todoIndex})">
-              <i class="fa-solid fa-delete-left"></i>
-            </button>
-          </div>
-        </div>`;
+  await fetch(`${API_URL}/${id}`, {
+    method: "DELETE",
   });
 
-  todocontainer.innerHTML = newInnerHTML;
-
-  //to save to local storage
-  localStorage.setItem("todos", JSON.stringify({ todoList }));
+  fetchTodos();
 }
 
+// Delete a task
+async function deleteTodo(id) {
+  await fetch(`${API_URL}/${id}`, {
+    method: "DELETE",
+  });
+
+  fetchTodos();
+}
+
+// Update the UI
+function updateUI(todos) {
+  todocontainer.innerHTML = todos
+    .map(
+      (todo) => `
+      <div class="todo">
+        <p>${todo.description}</p>
+        <div class="btnContainer">
+          <button class="iconBtn" onclick="editTodo(${todo.id}, '${todo.description}')">
+            <i class="fa-solid fa-pen-to-square"></i>
+          </button>
+          <button class="iconBtn" onclick="deleteTodo(${todo.id})">
+            <i class="fa-solid fa-delete-left"></i>
+          </button>
+        </div>
+      </div>
+    `
+    )
+    .join("");
+}
+
+// Load todos on page load
+fetchTodos();
 addBtn.addEventListener("click", addTodo);
