@@ -20,7 +20,7 @@ body {
 }
 
 h1 {
-  text-emphasis: "";
+  text-emphasis: ""; /* To insert emoticans press windows + . (period) then choose any of your preference*/
   text-align: center;
 }
 
@@ -30,12 +30,12 @@ section {
   flex-direction: column;
   gap: 14px;
   width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
+  max-width: 750px; /* It determines the maximum width of the web page */
+  margin: 0 auto; /* This property centers the form and section in the web page*/
 }
 
 form textarea {
-  resize: none;
+  resize: none; /* It helps maintain the  size of the textarea without resizing it hence better organization   */
   width: 100%;
   min-height: 60px;
   padding: 14px;
@@ -44,7 +44,11 @@ form textarea {
 form button {
   padding: 4px;
   cursor: pointer;
-  color: green;
+  color: white;
+  background-color: green;
+  border: none; /* Removes the designs around the border*/
+  border-radius: 4px; /* Responsible for the round edges of the button*/
+  outline: none;
 }
 
 .todocontainer,
